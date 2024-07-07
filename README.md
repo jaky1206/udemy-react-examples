@@ -1,2 +1,2 @@
 # React examples from Udemy 
-React examples from udemy by Maximilian Schwarzmüller
+React crash course examples from udemy by Maximilian Schwarzmüller
