@@ -1,54 +1,40 @@
 import { useState } from "react";
+
 import Post from "./Post";
 import NewPost from "./NewPost";
 import Modal from "./Modal";
 
 import classes from "./PostsList.module.css";
 
-function PostsList({IsPosting, onStopPosting}) {
-  
-  const [enteredBody, setEnteredBody] = useState("ReactJS is awesome!");
-  const [enteredAuthor, setEnteredAuthor] = useState("Maximillian");
+function PostsList({ IsPosting, onStopPosting }) {
+  const [posts, setPosts] = useState([]);
 
-  function bodyChaneHandler(event) {
-    setEnteredBody(event.target.value);
+  function addPostsHandler(postData) {
+    setPosts((exisitingPosts) => {
+      return [postData, ...exisitingPosts];
+    });
   }
-
-  function authorChangeHandler(event) {
-    setEnteredAuthor(event.target.value);
-  }
-
-  
-
-  // let modalContent;
-
-  // if (modalIsVisible) {
-  //   modalContent = (
-  //     <Modal onClose={hideModelHandler}>
-  //       <NewPost
-  //         onBodyChange={bodyChaneHandler}
-  //         onAuthorChange={authorChangeHandler}
-  //       />
-  //     </Modal>
-  //   );
-  // }
 
   return (
     <>
       {IsPosting && (
         <Modal onClose={onStopPosting}>
-          <NewPost
-            onBodyChange={bodyChaneHandler}
-            onAuthorChange={authorChangeHandler}
-            onCancel={onStopPosting}
-          />
+          <NewPost onCancel={onStopPosting} onAddPost={addPostsHandler} />
         </Modal>
       )}
-
-      <ul className={classes.posts}>
-        <Post author={enteredAuthor} body={enteredBody} />
-        <Post author="Manuel" body="Check out the full course!" />
-      </ul>
+      {posts.length > 0 && (
+        <ul className={classes.posts}>
+          {posts.map((post) => (
+            <Post key={post.body} author={post.author} body={post.body}></Post>
+          ))}
+        </ul>
+      )}
+      {posts.length === 0 && (
+        <div style={{ textAlign: "center", color: "white" }}>
+          <h2>No posts found.</h2>
+          <p>Start adding some!</p>
+        </div>
+      )}
     </>
   );
 }
